@@ -30,7 +30,7 @@ namespace ChannelEngine.Assessment.Application.Services
 
         public async Task<List<BestSellerProductDto>> GetBestSellerProductsAsync(int count = 5, CancellationToken cancellationToken = default)
         {
-            var orders = await _orderAdapter.GetOrdersByStatusesAsync(new[] { OrderStatus.InProgress });
+            var orders = await _orderAdapter.GetOrdersByStatusesAsync(new[] { OrderStatus.InProgress }, cancellationToken);
 
             var bestSellerProducts = _marketingService.GetBestSellerProducts(orders)
                 .ToDictionary(x => x.ProductId, x => x);
