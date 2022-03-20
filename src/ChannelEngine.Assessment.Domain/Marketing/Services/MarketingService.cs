@@ -6,19 +6,24 @@ namespace ChannelEngine.Assessment.Domain.Marketing.Services
 {
     public interface IMarketingService
     {
-        List<string> GetBestSellerProductIds(List<Order> orders, int count = 5);
+        List<OrderLine> GetBestSellerProductIds(List<Order> orders, int count = 5);
     }
 
     public class MarketingService : IMarketingService
     {
-        public List<string> GetBestSellerProductIds(List<Order> orders, int count = 5)
+        public List<OrderLine> GetBestSellerProductIds(List<Order> orders, int count = 5)
         {
             return orders.SelectMany(x => x.Lines)
-                 .OrderByDescending(x => x.Quantity)
-                 .Select(x => x.ProductId)
-                 .Distinct()
-                 .Take(count)
-                 .ToList();
+                  .GroupBy(x => x.ProductId)
+                  .Select(x => new OrderLine
+                  {
+                      Gtin = x.FirstOrDefault().Gtin,
+                      ProductId = x.FirstOrDefault().ProductId,
+                      Quantity = x.Sum(s => s.Quantity)
+                  })
+                  .OrderByDescending(x => x.Quantity)
+                  .Take(count)
+                  .ToList();
         }
     }
 }

@@ -32,17 +32,19 @@ namespace ChannelEngine.Assessment.Application.Services
         {
             var orders = await _orderAdapter.GetOrdersByStatusesAsync(new[] { OrderStatus.InProgress });
 
-            var orderLines = orders.SelectMany(x => x.Lines).ToDictionary(x => x.ProductId, x => x);
+            var bestSellerProducts = _marketingService.GetBestSellerProductIds(orders)
+                .ToDictionary(x => x.ProductId, x => x);
 
-            var bestSellerProductIds = _marketingService.GetBestSellerProductIds(orders);
+            var bestSellerProductIds = bestSellerProducts.Select(x => x.Key).ToArray();
 
-            var products = await _productAdapter.GetProductsByIds(bestSellerProductIds.ToArray(), cancellationToken);
+            var products = (await _productAdapter.GetProductsByIds(bestSellerProductIds, cancellationToken))
+                .ToDictionary(x => x.Id, x => x);
 
-            return products.Select(x => new BestSellerProductDto
+            return bestSellerProducts.Select(x => new BestSellerProductDto
             {
-                GTIN = orderLines[x.Id].Gtin,
-                ProductName = x.Name,
-                TotalQuantity = orderLines.Where(f => f.Value.ProductId == x.Id).Sum(x => x.Value.Quantity)
+                GTIN = x.Value.Gtin,
+                ProductName = products[x.Key].Name,
+                TotalQuantity = x.Value.Quantity
             }).ToList();
         }
     }
