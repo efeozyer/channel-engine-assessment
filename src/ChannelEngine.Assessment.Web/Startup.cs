@@ -27,6 +27,7 @@ namespace ChannelEngine.Assessment.Web
         {
             // Mvc
             services.AddControllersWithViews();
+            services.AddControllers().AddNewtonsoftJson();
 
             // Integration
             services.AddHttpClient();
@@ -68,6 +69,8 @@ namespace ChannelEngine.Assessment.Web
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                endpoints.MapControllers();
             });
         }
     }

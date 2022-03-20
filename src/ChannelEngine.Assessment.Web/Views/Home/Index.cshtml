@@ -1,8 +1,75 @@
-﻿@{
+﻿@model BestSellerProductsViewModel
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h3>Best seller products</h3>
+            <br />
+            <div class="alert alert-success" style="display:none" id="success" role="alert">
+              Product quantity updated!
+            </div>
+            <div class="alert alert-danger" style="display:none" id="error" role="alert">
+              Product quantity could not be updated!
+            </div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>GTIN</th>
+                        <th>Quntity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        if (Model.Products != null)
+                        {
+                            foreach (var product in Model.Products)
+                            {
+                                <tr>
+                                    <td>@product.ProductName</td>
+                                    <td>@product.GTIN</td>
+                                    <td>@product.TotalQuantity</td>
+                                    <td>
+                                        <button type="button" id="updateQuantity" data-id="@product.GTIN" class="btn btn-primary btn-sm">Update Quantity</button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(function() {
+            $('#updateQuantity').click(function(e) {
+
+                let quantity = prompt("Please enter quantity", '');
+
+                let productId = $(this).data("id");
+
+                $.ajax({
+                    method: "PATCH",
+                    url: "api/product/" + productId,
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        quantity: quantity
+                    }),
+                    processData: false,
+                    success: function(data) {
+                        $("#success").show().delay(3000).fadeOut();
+                    },
+                    error: function(data) {
+                        $("#error").show().delay(3000).fadeOut();
+                    }
+                })
+            });
+        });
+    </script>
+}

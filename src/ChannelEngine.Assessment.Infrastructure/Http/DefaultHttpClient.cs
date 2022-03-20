@@ -68,6 +68,23 @@ namespace ChannelEngine.Assessment.Infrastructure.Http
         {
             var requestBody = JsonConvert.SerializeObject(request);
 
+            /// JSONPatch issues
+            /// When path starting with "/", API not updating value
+            /// When request contains array API returning error: "The index value provided by path segment '0' is out of bounds of the array size.",
+            /*
+             [
+              {
+                "value": "test",
+                "path": "/ExtraData/0/Value",
+                "op": "replace"
+              },
+              {
+                "value": 11,
+                "path": "/Stock",
+                "op": "replace"
+              }
+            ]
+            */
             var httpResponse = await _httpClient.PatchAsync(path, new StringContent(requestBody, null, "application/json-patch+json"), cancellationToken)
                 .ConfigureAwait(false);
 

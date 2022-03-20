@@ -1,8 +1,6 @@
-﻿using ChannelEngine.Assessment.Application.DTOs;
-using ChannelEngine.Assessment.Application.Services;
+﻿using ChannelEngine.Assessment.Application.Services;
 using ChannelEngine.Assessment.Web.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,11 +16,13 @@ namespace ChannelEngine.Assessment.Web.Controllers
             _marketingApplicationService = marketingApplicationService;
         }
 
-        public async Task<List<BestSellerProductDto>> Index(CancellationToken cancellationToken)
+        public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
-            var bestSellerProducts = await _marketingApplicationService.GetBestSellerProductsAsync(5, cancellationToken);
+            var viewModel = new BestSellerProductsViewModel();
 
-            return bestSellerProducts;
+            viewModel.Products = await _marketingApplicationService.GetBestSellerProductsAsync(5, cancellationToken);
+
+            return View(viewModel);
         }
 
         public IActionResult Privacy()
