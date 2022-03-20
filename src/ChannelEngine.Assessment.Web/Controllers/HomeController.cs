@@ -1,26 +1,28 @@
-﻿using ChannelEngine.Assessment.Web.Models;
+﻿using ChannelEngine.Assessment.Application.DTOs;
+using ChannelEngine.Assessment.Application.Services;
+using ChannelEngine.Assessment.Web.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ChannelEngine.Assessment.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IMarketingApplicationService _marketingApplicationService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IMarketingApplicationService marketingApplicationService)
         {
-            _logger = logger;
+            _marketingApplicationService = marketingApplicationService;
         }
 
-        public IActionResult Index()
+        public async Task<List<BestSellerProductDto>> Index(CancellationToken cancellationToken)
         {
-            return View();
+            var bestSellerProducts = await _marketingApplicationService.GetBestSellerProductsAsync(5, cancellationToken);
+
+            return bestSellerProducts;
         }
 
         public IActionResult Privacy()
