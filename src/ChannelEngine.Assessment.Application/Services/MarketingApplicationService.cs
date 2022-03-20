@@ -32,7 +32,7 @@ namespace ChannelEngine.Assessment.Application.Services
         {
             var orders = await _orderAdapter.GetOrdersByStatusesAsync(new[] { OrderStatus.InProgress });
 
-            var bestSellerProducts = _marketingService.GetBestSellerProductIds(orders)
+            var bestSellerProducts = _marketingService.GetBestSellerProducts(orders)
                 .ToDictionary(x => x.ProductId, x => x);
 
             var bestSellerProductIds = bestSellerProducts.Select(x => x.Key).ToArray();

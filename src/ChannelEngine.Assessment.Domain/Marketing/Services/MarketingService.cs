@@ -6,12 +6,12 @@ namespace ChannelEngine.Assessment.Domain.Marketing.Services
 {
     public interface IMarketingService
     {
-        List<OrderLine> GetBestSellerProductIds(List<Order> orders, int count = 5);
+        List<OrderLine> GetBestSellerProducts(List<Order> orders, int count = 5);
     }
 
     public class MarketingService : IMarketingService
     {
-        public List<OrderLine> GetBestSellerProductIds(List<Order> orders, int count = 5)
+        public List<OrderLine> GetBestSellerProducts(List<Order> orders, int count = 5)
         {
             return orders.SelectMany(x => x.Lines)
                   .GroupBy(x => x.ProductId)
