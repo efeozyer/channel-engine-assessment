@@ -1,3 +1,5 @@
+using ChannelEngine.Assessment.Infrastructure.Integrations;
+using ChannelEngine.Assessment.Infrastructure.Integrations.ChannelEngine;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -24,6 +26,8 @@ namespace ChannelEngine.Assessment.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddHttpClient();
+            services.AddIntegrationClient<ChannelEngineClient, ChannelEngineClientConfig>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
