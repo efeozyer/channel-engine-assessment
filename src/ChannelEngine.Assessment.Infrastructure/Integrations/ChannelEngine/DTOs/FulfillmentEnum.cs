@@ -1,6 +1,6 @@
 ﻿namespace ChannelEngine.Assessment.Infrastructure.Integrations.ChannelEngine
 {
-    public enum Fulfillment
+    public enum FulfillmentEnum
     {
         ALL,
         ONLY_MERCHANT,
