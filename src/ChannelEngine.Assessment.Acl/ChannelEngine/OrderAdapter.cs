@@ -36,13 +36,14 @@ namespace ChannelEngine.Assessment.Acl.ChannelEngine
         {
             switch (orderStatus)
             {
-                
                 case OrderStatus.Pending:
                     return Enum.GetName(typeof(OrderStatusEnum), OrderStatusEnum.AWAITING_PAYMENT);
                 case OrderStatus.Returned:
                     return Enum.GetName(typeof(OrderStatusEnum), OrderStatusEnum.RETURNED);
                 case OrderStatus.Shipped:
                     return Enum.GetName(typeof(OrderStatusEnum), OrderStatusEnum.SHIPPED);
+                case OrderStatus.InProgress:
+                    return Enum.GetName(typeof(OrderStatusEnum), OrderStatusEnum.IN_PROGRESS);
 
                 case OrderStatus.None:
                 default:
