@@ -30,6 +30,16 @@ namespace ChannelEngine.Assessment.Acl.ChannelEngine
             return response.Content.Select(x => Map(x)).ToList();
         }
 
+        public async Task<bool> UpdateProductQuantityAsync(string productId, int quantity, CancellationToken cancellationToken)
+        {
+            var request = new UpdateProductRequest(productId);
+            request.Replace(x => x.Stock, quantity);
+
+            var response = await _channelEngineClient.UpdateProductByIdAsync(request, cancellationToken);
+
+            return response.Success && response.Content.AcceptedCount > 0 && response.Content.RejectedCount == 0;
+        }
+
         #region Private methods
         private Product Map(ProductDto product)
         {

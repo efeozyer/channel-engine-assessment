@@ -8,5 +8,7 @@ namespace ChannelEngine.Assessment.Acl
     public interface IProductAdapter
     {
         Task<List<Product>> GetProductsByIds(string[] productIds, CancellationToken cancellationToken = default);
+
+        Task<bool> UpdateProductQuantityAsync(string productId, int quantity, CancellationToken cancellationToken);
     }
 }

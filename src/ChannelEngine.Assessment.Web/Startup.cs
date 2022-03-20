@@ -2,14 +2,9 @@ using ChannelEngine.Assessment.Infrastructure.Integrations;
 using ChannelEngine.Assessment.Infrastructure.Integrations.ChannelEngine;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ChannelEngine.Assessment.Web
 {
@@ -25,7 +20,10 @@ namespace ChannelEngine.Assessment.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Mvc
             services.AddControllersWithViews();
+
+            // Integration
             services.AddHttpClient();
             services.AddIntegrationClient<ChannelEngineClient, ChannelEngineClientConfig>();
         }

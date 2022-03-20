@@ -12,7 +12,7 @@ namespace ChannelEngine.Assessment.Application.Services
 {
     public interface IMarketingApplicationService
     {
-        Task<List<BestSellerProductDto>> GetBestSellerProducts(int count = 5, CancellationToken cancellationToken = default);
+        Task<List<BestSellerProductDto>> GetBestSellerProductsAsync(int count = 5, CancellationToken cancellationToken = default);
     }
 
     public class MarketingApplicationService : IMarketingApplicationService
@@ -28,7 +28,7 @@ namespace ChannelEngine.Assessment.Application.Services
             _marketingService = marketingService;
         }
 
-        public async Task<List<BestSellerProductDto>> GetBestSellerProducts(int count = 5, CancellationToken cancellationToken = default)
+        public async Task<List<BestSellerProductDto>> GetBestSellerProductsAsync(int count = 5, CancellationToken cancellationToken = default)
         {
             var orders = await _orderAdapter.GetOrdersByStatusesAsync(new[] { OrderStatus.InProgress });
 
