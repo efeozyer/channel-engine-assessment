@@ -42,6 +42,7 @@ namespace ChannelEngine.Assessment.Application.Services
 
             return bestSellerProducts.Select(x => new BestSellerProductDto
             {
+                ProductId = x.Key,
                 GTIN = x.Value.Gtin,
                 ProductName = products[x.Key].Name,
                 TotalQuantity = x.Value.Quantity
