@@ -1,13 +1,15 @@
-using ChannelEngine.Assessment.Acl;
-using ChannelEngine.Assessment.Acl.ChannelEngine;
-using ChannelEngine.Assessment.Application.Services;
-using ChannelEngine.Assessment.Infrastructure.Integrations;
-using ChannelEngine.Assessment.Infrastructure.Integrations.ChannelEngine;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
+using ChannelEngine.Assessment.Acl;
+using ChannelEngine.Assessment.Acl.ChannelEngine;
+using ChannelEngine.Assessment.Application.Services;
+using ChannelEngine.Assessment.Domain.Marketing.Services;
+using ChannelEngine.Assessment.Infrastructure.Integrations;
+using ChannelEngine.Assessment.Infrastructure.Integrations.ChannelEngine;
 
 namespace ChannelEngine.Assessment.Web
 {
@@ -36,6 +38,9 @@ namespace ChannelEngine.Assessment.Web
             // Application services
             services.AddSingleton<IMarketingApplicationService, MarketingApplicationService>();
             services.AddSingleton<IWarehouseApplicationService, WarehouseApplicationService>();
+
+            // Domain services
+            services.AddSingleton<IMarketingService, MarketingService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
