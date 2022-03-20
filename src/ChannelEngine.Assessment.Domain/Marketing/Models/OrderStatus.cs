@@ -5,6 +5,7 @@
         None,
         Pending,
         Returned,
-        Shipped
+        Shipped,
+        InProgress
     }
 }
