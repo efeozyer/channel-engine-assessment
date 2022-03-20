@@ -1,3 +1,6 @@
+using ChannelEngine.Assessment.Acl;
+using ChannelEngine.Assessment.Acl.ChannelEngine;
+using ChannelEngine.Assessment.Application.Services;
 using ChannelEngine.Assessment.Infrastructure.Integrations;
 using ChannelEngine.Assessment.Infrastructure.Integrations.ChannelEngine;
 using Microsoft.AspNetCore.Builder;
@@ -26,6 +29,13 @@ namespace ChannelEngine.Assessment.Web
             // Integration
             services.AddHttpClient();
             services.AddIntegrationClient<ChannelEngineClient, ChannelEngineClientConfig>();
+
+            // Adapters
+            services.AddAdapter<ChannelEngineAdapterProvider>();
+
+            // Application services
+            services.AddSingleton<IMarketingApplicationService, MarketingApplicationService>();
+            services.AddSingleton<IWarehouseApplicationService, WarehouseApplicationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ChannelEngine.Assessment.Application\ChannelEngine.Assessment.Application.csproj" />
     <ProjectReference Include="..\ChannelEngine.Assessment.Infrastructure\ChannelEngine.Assessment.Infrastructure.csproj" />
   </ItemGroup>
 
