@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <Folder Include="Http\" />
+    <Folder Include="Integrations\ChannelEngine\Messages\" />
   </ItemGroup>
 
 </Project>
