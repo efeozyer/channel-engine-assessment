@@ -4,4 +4,9 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ChannelEngine.Assessment.Domain\ChannelEngine.Assessment.Domain.csproj" />
+    <ProjectReference Include="..\ChannelEngine.Assessment.Infrastructure\ChannelEngine.Assessment.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
