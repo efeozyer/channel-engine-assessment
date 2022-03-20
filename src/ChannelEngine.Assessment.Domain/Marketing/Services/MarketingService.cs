@@ -16,8 +16,8 @@ namespace ChannelEngine.Assessment.Domain.Marketing.Services
             return orders.SelectMany(x => x.Lines)
                  .OrderByDescending(x => x.Quantity)
                  .Select(x => x.ProductId)
-                 .Take(count)
                  .Distinct()
+                 .Take(count)
                  .ToList();
         }
     }
