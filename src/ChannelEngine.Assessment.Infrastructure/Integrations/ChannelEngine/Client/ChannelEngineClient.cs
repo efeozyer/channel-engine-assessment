@@ -28,7 +28,6 @@ namespace ChannelEngine.Assessment.Infrastructure.Integrations.ChannelEngine
 
         public async Task<PagingResponse<OrderDto>> GetOrdersByFilterAsync(GetOrdersByFilterRequest request, CancellationToken cancellationToken = default)
         {
-            // TODO: I just wondered, why we're passing api key in url instead of request headers?
             var response = await _httpClient.GetAsync<PagingResponse<OrderDto>>($"orders", request, cancellationToken);
 
             return ValidateClientResponse(request, response);

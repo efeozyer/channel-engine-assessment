@@ -19,6 +19,7 @@ namespace ChannelEngine.Assessment.Infrastructure.Integrations.ChannelEngine
         {
             var queryString = ToQueryString(query);
 
+            // TODO: I just wondered, why we're passing api key in url instead of request headers?
             var httpResponse = await _httpClient.GetAsync(path + queryString + $"&apiKey={_apiKey}", cancellationToken)
                 .ConfigureAwait(false);
 
