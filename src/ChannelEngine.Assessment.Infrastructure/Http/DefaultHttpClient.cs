@@ -18,7 +18,7 @@ namespace ChannelEngine.Assessment.Infrastructure.Http
     {
         private readonly ILogger _logger = Log.ForContext<DefaultHttpClient>();
 
-        private readonly HttpClient _httpClient;
+        protected readonly HttpClient _httpClient;
         private bool _disposedValue;
 
         public DefaultHttpClient(HttpClient httpClient)
@@ -26,7 +26,7 @@ namespace ChannelEngine.Assessment.Infrastructure.Http
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
-        public async Task<TResponse> GetAsync<TResponse>(string path, string query, CancellationToken cancellationToken = default)
+        public virtual async Task<TResponse> GetAsync<TResponse>(string path, string query, CancellationToken cancellationToken = default)
         {
             var httpResponse = await _httpClient.GetAsync(path + query, cancellationToken)
                 .ConfigureAwait(false);
@@ -34,7 +34,7 @@ namespace ChannelEngine.Assessment.Infrastructure.Http
             return await DeserializeResponseAsync<TResponse>(httpResponse, cancellationToken);
         }
 
-        public async Task<TResponse> GetAsync<TResponse>(string path, object query, CancellationToken cancellationToken = default)
+        public virtual async Task<TResponse> GetAsync<TResponse>(string path, object query, CancellationToken cancellationToken = default)
         {
             var queryString = ToQueryString(query);
 
@@ -44,7 +44,7 @@ namespace ChannelEngine.Assessment.Infrastructure.Http
             return await DeserializeResponseAsync<TResponse>(httpResponse, cancellationToken);
         }
 
-        public async Task<TResponse> PostAsync<TRequest, TResponse>(string path, TRequest request, CancellationToken cancellationToken)
+        public virtual async Task<TResponse> PostAsync<TRequest, TResponse>(string path, TRequest request, CancellationToken cancellationToken)
             where TRequest : class
         {
             var requestBody = JsonConvert.SerializeObject(request);
@@ -55,7 +55,7 @@ namespace ChannelEngine.Assessment.Infrastructure.Http
             return await DeserializeResponseAsync<TResponse>(httpResponse, cancellationToken);
         }
 
-        public async Task<bool> DeleteAsync(string path, CancellationToken cancellationToken = default)
+        public virtual async Task<bool> DeleteAsync(string path, CancellationToken cancellationToken = default)
         {
             var httpResponse = await _httpClient.DeleteAsync(path, cancellationToken)
                 .ConfigureAwait(false);
@@ -63,35 +63,18 @@ namespace ChannelEngine.Assessment.Infrastructure.Http
             return httpResponse.IsSuccessStatusCode;
         }
 
-        public async Task<TResponse> PatchAsync<TRequest, TResponse>(string path, TRequest request, CancellationToken cancellationToken = default)
+        public virtual async Task<TResponse> PatchAsync<TRequest, TResponse>(string path, TRequest request, CancellationToken cancellationToken = default)
             where TRequest : class, IJsonPatchDocument
         {
             var requestBody = JsonConvert.SerializeObject(request);
 
-            /// JSONPatch issues
-            /// When path starting with "/", API not updating value
-            /// When request contains array API returning error: "The index value provided by path segment '0' is out of bounds of the array size.",
-            /*
-             [
-              {
-                "value": "test",
-                "path": "/ExtraData/0/Value",
-                "op": "replace"
-              },
-              {
-                "value": 11,
-                "path": "/Stock",
-                "op": "replace"
-              }
-            ]
-            */
             var httpResponse = await _httpClient.PatchAsync(path, new StringContent(requestBody, null, "application/json-patch+json"), cancellationToken)
                 .ConfigureAwait(false);
 
             return await DeserializeResponseAsync<TResponse>(httpResponse, cancellationToken);
         }
 
-        public async Task<TResponse> PutAsync<TRequest, TResponse>(string path, TRequest request, CancellationToken cancellationToken = default)
+        public virtual async Task<TResponse> PutAsync<TRequest, TResponse>(string path, TRequest request, CancellationToken cancellationToken = default)
             where TRequest : class
         {
             var requestBody = JsonConvert.SerializeObject(request);
@@ -103,7 +86,7 @@ namespace ChannelEngine.Assessment.Infrastructure.Http
                 .ConfigureAwait(false);
         }
 
-        private async Task<TResponse> DeserializeResponseAsync<TResponse>(HttpResponseMessage httpResponse, CancellationToken cancellationToken)
+        protected virtual async Task<TResponse> DeserializeResponseAsync<TResponse>(HttpResponseMessage httpResponse, CancellationToken cancellationToken)
         {
             if (!httpResponse.IsSuccessStatusCode)
             {
@@ -127,7 +110,7 @@ namespace ChannelEngine.Assessment.Infrastructure.Http
             return default(TResponse);
         }
 
-        public static string ToQueryString(object request, string separator = ",")
+        public virtual string ToQueryString(object request, string separator = ",")
         {
             if (request == null)
                 throw new ArgumentNullException("request");
@@ -155,7 +138,7 @@ namespace ChannelEngine.Assessment.Infrastructure.Http
                 }
             }
 
-            return string.Join("&", properties
+            return "?" + string.Join("&", properties
                 .Select(x => string.Concat(
                     Uri.EscapeDataString(x.Key), "=",
                     Uri.EscapeDataString(x.Value.ToString()))));

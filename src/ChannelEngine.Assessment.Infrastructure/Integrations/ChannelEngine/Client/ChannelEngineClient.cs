@@ -19,30 +19,31 @@ namespace ChannelEngine.Assessment.Infrastructure.Integrations.ChannelEngine
 
         public ChannelEngineClient(HttpClient httpClient, ChannelEngineClientConfig clientConfig)
         {
+            _clientConfig = clientConfig ?? throw new ArgumentNullException(nameof(clientConfig));
+
             httpClient.BaseAddress = new Uri(clientConfig.ServiceUrl);
 
-            _httpClient = new DefaultHttpClient(httpClient);
-            _clientConfig = clientConfig;
+            _httpClient = new ChannelEngineHttpClient(httpClient, _clientConfig.ApiKey);
         }
 
         public async Task<PagingResponse<OrderDto>> GetOrdersByFilterAsync(GetOrdersByFilterRequest request, CancellationToken cancellationToken = default)
         {
             // TODO: I just wondered, why we're passing api key in url instead of request headers?
-            var response = await _httpClient.GetAsync<PagingResponse<OrderDto>>($"orders?apiKey={_clientConfig.ApiKey}&", request, cancellationToken);
+            var response = await _httpClient.GetAsync<PagingResponse<OrderDto>>($"orders", request, cancellationToken);
 
             return ValidateClientResponse(request, response);
         }
 
         public async Task<PagingResponse<ProductDto>> GetProductsByFilterAsync(GetProductsByFilterRequest request, CancellationToken cancellationToken = default)
         {
-            var response = await _httpClient.GetAsync<PagingResponse<ProductDto>>($"products?apiKey={_clientConfig.ApiKey}&", request, cancellationToken);
+            var response = await _httpClient.GetAsync<PagingResponse<ProductDto>>($"products", request, cancellationToken);
 
             return ValidateClientResponse(request, response);
         }
 
         public async Task<ApiResponse<UpdateProductResponse>> UpdateProductByIdAsync(UpdateProductRequest request, CancellationToken cancellationToken = default)
         {
-            var response = await _httpClient.PatchAsync<UpdateProductRequest, ApiResponse<UpdateProductResponse>>($"products/{request.MerchantProductNo}/?apiKey={_clientConfig.ApiKey}&", request, cancellationToken);
+            var response = await _httpClient.PatchAsync<UpdateProductRequest, ApiResponse<UpdateProductResponse>>($"products/{request.MerchantProductNo}", request, cancellationToken);
 
             return ValidateClientResponse(request, response);
         }
@@ -55,6 +56,8 @@ namespace ChannelEngine.Assessment.Infrastructure.Integrations.ChannelEngine
             if (response == null || !response.Success || response.ValidationErrors.Any() || !string.IsNullOrWhiteSpace(response.Message))
             {
                 _logger.Error($"{_clientConfig.Name} : An error occourd ({request.GetType().FullName}) details : {response.Message}");
+
+                throw new HttpRequestException("Request failed!");
             }
 
             return response;
